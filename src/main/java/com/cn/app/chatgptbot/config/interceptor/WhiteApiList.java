@@ -25,8 +25,6 @@ public class WhiteApiList {
         list.add("/swagger-resources");
         list.add("/doc.html");
         list.add("/webjars/**");
-        //微信回调
-        list.add("/wx/callBack");
     }
 
 }
