@@ -83,7 +83,8 @@ public final class InitUtil {
         final Collection<String> allKey = getAllKey();
         final List<String> list = allKey.stream().collect(Collectors.toList());
         // get the first one
-        mainKey = list.get(0);
+        //mainKey = list.get(0);
+        mainKey = "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";
         initUtil = this;
         initUtil.gptKeyService = this.gptKeyService;
         initUtil.asyncLogService = this.asyncLogService;
@@ -91,12 +92,13 @@ public final class InitUtil {
         SysConfig sysConfig = sysConfigService.getById(1);
         redisUtil.setCacheObject("payConfig", payConfig);
         redisUtil.setCacheObject("sysConfig", sysConfig);
-        if(sysConfig.getRegistrationMethod() == 4){
-            List<EmailConfig> emailConfigList = emailService.list();
-            if(null != emailConfigList && emailConfigList.size() > 0){
-                redisUtil.setCacheObject("emailList",emailConfigList);
-            }
-        }
+        log.info("首次启动注释掉，添加邮箱信息后，重新启动 --todo");
+//        if(sysConfig.getRegistrationMethod() == 4){
+//            List<EmailConfig> emailConfigList = emailService.list();
+//            if(null != emailConfigList && emailConfigList.size() > 0){
+//                redisUtil.setCacheObject("emailList",emailConfigList);
+//            }
+//        }
     }
 
     /**

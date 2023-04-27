@@ -23,6 +23,7 @@ import com.chat.java.service.IProductService;
 import javax.annotation.Resource;
 
 import com.chat.java.utils.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ import java.util.List;
  * @since 2022-03-12 15:23:55
  */
 @Service("ProductService")
+@Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class ProductServiceImpl extends ServiceImpl<ProductDao, Product> implements IProductService {
 
@@ -120,7 +122,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, Product> impleme
         jsonObject.put("productList",list);
         jsonObject.put("orderList",userOrderList);
         PayConfig payConfig = RedisUtil.getCacheObject("payConfig");
-        jsonObject.put("payType",payConfig.getPayType());
+        log.info("payType待对接， 暂时设置为0 --tod0");
+        jsonObject.put("payType",0);
+        log.info("商品信息：{}",jsonObject);
         return B.okBuild(jsonObject);
     }
 }

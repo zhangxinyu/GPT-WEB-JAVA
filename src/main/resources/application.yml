@@ -42,3 +42,6 @@ wx:
     secret: 微信secret
     config-storage:
       type: redistemplate
+# bing机器人请求路径
+bingUrl: "http://XXXXXXXXX:3000/bing"
+chatGptKey: "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"

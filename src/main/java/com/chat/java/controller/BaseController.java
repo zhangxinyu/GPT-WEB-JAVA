@@ -23,6 +23,7 @@ import com.chat.java.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/user/token")
 @RequiredArgsConstructor
-@Api(tags = {"用户/管理员登录、注册，首页，获取用户类型"})
+@Slf4j
+@Api(tags = {"用户管理员登录、注册，首页，获取用户类型"})
 public class BaseController {
 
 
@@ -54,7 +56,7 @@ public class BaseController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "用户登录")
-    @AvoidRepeatRequest(intervalTime = 60 * 3L ,msg = "请勿短时间连续登录")
+    //@AvoidRepeatRequest(intervalTime = 60 * 3L ,msg = "请勿短时间连续登录")
     public B<JSONObject> userLogin(@Validated @RequestBody UserLogin userLogin) {
         List<User> list = userService.lambdaQuery()
                 .eq(User::getMobile, userLogin.getMobile())
@@ -83,14 +85,14 @@ public class BaseController {
     }
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ApiOperation(value = "注册")
-    @AvoidRepeatRequest(msg = "请勿短时间内重复注册")
+//    @AvoidRepeatRequest(msg = "请勿短时间内重复注册")
     public B register(@Validated @RequestBody RegisterReq req) {
         return userService.register(req);
     }
 
     @RequestMapping(value = "/register/msm", method = RequestMethod.POST)
     @ApiOperation(value = "短信验证码注册")
-    @AvoidRepeatRequest(msg = "请勿短时间内重复注册")
+//    @AvoidRepeatRequest(msg = "请勿短时间内重复注册")
     public B<String> registerMsm(@Validated @RequestBody MsmRegisterReq req) {
         return userService.registerMsm(req);
     }
@@ -98,7 +100,7 @@ public class BaseController {
 
     @RequestMapping(value = "/register/email", method = RequestMethod.POST)
     @ApiOperation(value = "邮件验证码注册")
-    @AvoidRepeatRequest(msg = "请勿短时间内重复注册")
+//    @AvoidRepeatRequest(msg = "请勿短时间内重复注册")
     public B<String> registerEmail(@Validated @RequestBody EmailRegisterReq req) {
         return userService.registerEmail(req);
     }
@@ -156,7 +158,7 @@ public class BaseController {
 
     @RequestMapping(value = "/send/msg", method = RequestMethod.POST)
     @ApiOperation(value = "发送短信")
-    @AvoidRepeatRequest(intervalTime = 180,msg = "请勿频繁发送验证码")
+//    @AvoidRepeatRequest(intervalTime = 180,msg = "请勿频繁发送验证码")
     public B<Void> sendMsg(@Validated @RequestBody SendMsgReq req) throws ClientException {
         SysConfig sysConfig = RedisUtil.getCacheObject("sysConfig");
         if(sysConfig.getRegistrationMethod() != 2 ){
@@ -177,12 +179,13 @@ public class BaseController {
     @ApiOperation(value = "查询注册方式")
     public B<Integer> getRegisterMethod() {
         SysConfig sysConfig = RedisUtil.getCacheObject("sysConfig");
+        log.info("getRegisterMethod-sysConfig::{}",sysConfig);
         return B.okBuild(sysConfig.getRegistrationMethod());
     }
 
     @RequestMapping(value = "/send/mail", method = RequestMethod.POST)
     @ApiOperation(value = "发送邮件")
-    @AvoidRepeatRequest(intervalTime = 180,msg = "请勿频繁发送验证码")
+//    @AvoidRepeatRequest(intervalTime = 180,msg = "请勿频繁发送验证码")
     public B<Void> sendEmail(@Validated @RequestBody SendEmailReq req) throws ClientException {
         SysConfig sysConfig = RedisUtil.getCacheObject("sysConfig");
         if(sysConfig.getRegistrationMethod() != 4 ){

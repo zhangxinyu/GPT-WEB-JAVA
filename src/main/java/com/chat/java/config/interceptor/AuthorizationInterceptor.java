@@ -29,13 +29,14 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object handler) throws IOException {
         //判断token是否存在
         log.info("请求接口地址：{}", request.getServletPath());
-        long userId = JwtUtil.getUserId();
-        String redisToken = RedisUtil.getCacheObject(CommonConst.REDIS_KEY_PREFIX_TOKEN + userId);
-        String handlerToken = request.getHeader("token");
-        if (StringUtils.isEmpty(redisToken) || !redisToken.equals(SecureUtil.md5(handlerToken))) {
-            returnResult(httpServletResponse, 10001, "token已失效，请重新登录");
-            return false;
-        }
+        log.info("打开token判断 --todo");
+//        long userId = JwtUtil.getUserId();
+//        String redisToken = RedisUtil.getCacheObject(CommonConst.REDIS_KEY_PREFIX_TOKEN + userId);
+//        String handlerToken = request.getHeader("token");
+//        if (StringUtils.isEmpty(redisToken) || !redisToken.equals(SecureUtil.md5(handlerToken))) {
+//            returnResult(httpServletResponse, 10001, "token已失效，请重新登录");
+//            return false;
+//        }
         return true;
     }
 

@@ -28,6 +28,7 @@ import com.chat.java.model.res.*;
 import javax.annotation.Resource;
 
 import com.chat.java.utils.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -43,6 +44,7 @@ import java.util.List;
  * @since 2022-03-12 15:23:55
  */
 @Service("userService")
+@Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUserService {
 
@@ -118,7 +120,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
 
     @Override
     public  B<Void> register(RegisterReq req) {
+        log.info("注册请求信息：{}",req);
         SysConfig sysConfig = RedisUtil.getCacheObject("sysConfig");
+        log.info("注册方式配置信息：{}",sysConfig);
         if(sysConfig.getRegistrationMethod() != 1){
             throw new CustomException("暂未开放账号密码注册");
         }
@@ -166,15 +170,18 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     @Override
     public B<String> registerEmail(EmailRegisterReq req) {
         SysConfig sysConfig = RedisUtil.getCacheObject("sysConfig");
+        log.info("sysConfig::{}",sysConfig);
         if(sysConfig.getRegistrationMethod() != 4){
             throw new CustomException("暂未开放邮件注册");
         }
-        String code = RedisUtil.getCacheObject("EMAIL:" + req.getEmail());
-        if(StringUtils.isEmpty(code) || !code.equals(req.getEmailCode())){
-            throw new CustomException("验证码错误");
-        }else {
-            RedisUtil.deleteObject("EMAIL:" + req.getEmail());
-        }
+        log.info("打开邮箱验证 --todo");
+//        String code = RedisUtil.getCacheObject("EMAIL:" + req.getEmail());
+//        if(StringUtils.isEmpty(code) || !code.equals(req.getEmailCode())){
+//            throw new CustomException("验证码错误");
+//        }else {
+//            RedisUtil.deleteObject("EMAIL:" + req.getEmail());
+//        }
+
         User user = BeanUtil.copyProperties(req, User.class);
         Long count = this.lambdaQuery().eq(null != user.getName(), User::getName, user.getName())
                 .eq(null != user.getMobile(), User::getMobile, user.getMobile())
